@@ -22,7 +22,9 @@ static void os_timer_ex_handler(unsigned long timer_arg)
 {
     struct os_timer_ext    *timer_object;
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 16, 0))
+    timer_object = timer_container_of(timer_object, timer_arg, os_timer);
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0))
     timer_object = from_timer(timer_object, timer_arg, os_timer);
 #else
     timer_object = (struct os_timer_ext *)(timer_arg);
@@ -60,7 +62,6 @@ static void os_timer_ex_handler(unsigned long timer_arg)
     (void) cmpxchg(&(timer_object->timer_lock), 1, 0);
     //here, timer_lock=0
 }
-
 
 unsigned char os_timer_ex_initialize(struct os_timer_ext *timer_object,
     unsigned int timer_period, timer_handler_func timer_handler, void *context)
