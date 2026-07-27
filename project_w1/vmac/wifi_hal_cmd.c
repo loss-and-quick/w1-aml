@@ -2208,10 +2208,6 @@ unsigned int hal_cfg_cali_param(void)
     return true;
 }
 
-void print_driver_version(void) {
-  printk("driver version: %s\n", DRIVERVERSION);
-}
-
 #ifdef HAL_SIM_VER
 #ifdef FW_NAME
 }
