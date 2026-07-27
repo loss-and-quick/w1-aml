@@ -104,13 +104,14 @@ ccflags-y += -DDYNAMIC_BW
 ifneq ($(UNO_GXL),)
 ifeq ($(UNOENV),$(UNO_GXL))
 ccflags-y += -DCONFIG_GXL
-ccflags-y += -DCONFIG_HAS_WAKELOCK
 #ccflags-y += -DCONFIG_RTC_ENABLE
 #ccflags-y += -DCONFIG_GPIO_RESET
 ccflags-y += -DUSE_GPIO_IRQ=1
 ccflags-y += -DUSE_SDIO_IRQ=0
 endif
 endif
+
+ccflags-y += -DCONFIG_HAS_WAKELOCK
 
 ifeq ($(USE_GPIO_IRQ)$(USE_SDIO_IRQ),)
 ccflags-y += -DUSE_SDIO_IRQ=1
