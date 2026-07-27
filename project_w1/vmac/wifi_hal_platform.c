@@ -13,7 +13,9 @@ namespace FW_NAME
 #include "version.h"
 #include "wifi_drv_reg_ops.h"
 #if defined (HAL_FPGA_VER)
+#if !defined(NOT_AMLOGIC_PLATFORM) && defined(CONFIG_AMLOGIC_KERNEL_VERSION)
 #include <linux/amlogic/aml_gpio_consumer.h>
+#endif
 #include "wifi_mac_com.h"
 #include <linux/delay.h>
 #endif
@@ -197,7 +199,6 @@ static void reset_wifi(void)
 void platform_wifi_reset_cpu(void)
 {
 }
-
 
 void platform_wifi_clk_source_sel(int is_ssv_clk)
 {    
@@ -1071,7 +1072,6 @@ static void aml_rmmod(void)
 #endif
 }
 
-
 MODULE_LICENSE("GPL");
 module_init(aml_insmod);
 module_exit(aml_rmmod);
@@ -1084,7 +1084,6 @@ module_param(con_mode, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 module_param(plt_ver, charp, S_IRUGO);
 module_param(sdblksize, int, S_IRUGO);
 module_param(en_rf_test, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-
 
 /* Added for pass mac address when load wifi driver
  * Usage: insmod ***.ko mac_addr=xx:xx:xx:xx:xx:xx
@@ -1100,7 +1099,6 @@ MODULE_PARM_DESC(dhcp_offload, "A short variable to control dhcp offload functio
 
 module_param(country_code, charp, 0644);
 MODULE_PARM_DESC(country_code,"A string variable to describe country code");
-
 
 #endif
 
