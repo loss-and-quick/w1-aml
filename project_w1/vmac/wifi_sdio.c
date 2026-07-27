@@ -1321,7 +1321,11 @@ static void aml_customer_gpio_wlan_ctrl(int onoff)
     }
 }
 
+#ifdef NOT_AMLOGIC_PLATFORM
+static inline void set_usb_wifi_power(int is_on) { }
+#else
 extern void set_usb_wifi_power(int is_on);
+#endif
 extern unsigned char w1_wifi_sdio_access;
 #ifdef SDIO_BUILD_IN
 static void config_pmu_reg(bool is_power_on)
