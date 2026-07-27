@@ -59,14 +59,21 @@ static int readFile(struct file *fp, char *buf, int len)
     }
 
     while (sum < len) {
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0))
+        /*
+         * kernel_read(struct file *, void *, size_t, loff_t *) has kept
+         * this exact signature from 4.14 through at least v7.1 (verified
+         * against include/linux/fs.h); the original code guarded this
+         * call with "< 5.15.0" and had no replacement for newer kernels,
+         * so readFile() silently returned 0 bytes read on every kernel
+         * >= 5.15 (rlen stayed at its 0 initializer and the loop hit the
+         * "break" case on the very first iteration).
+         */
         rlen = kernel_read(fp, buf + sum, len - sum, &fp->f_pos);
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0))
         rlen = __vfs_read(fp, buf + sum, len - sum, &fp->f_pos);
 #else
         rlen = fp->f_op->read(fp, buf + sum, len - sum, &fp->f_pos);
-#endif
 #endif
         if (rlen > 0) {
             sum += rlen;
