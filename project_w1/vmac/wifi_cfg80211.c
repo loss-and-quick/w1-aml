@@ -142,7 +142,6 @@ struct ieee80211_channel aml_5ghz_channels[AML_5G_CHANNELS_NUM] =
     CHAN5G(165, 0),
 };
 
-
 struct ieee80211_rate aml_rates[AML_G_RATES_NUM] =
 {
     RATETAB_ENT(10,  0x1,   0),
@@ -210,8 +209,6 @@ vm_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] =
         BIT(IEEE80211_STYPE_ACTION >> 4)
     },
 };
-
-
 
 static void aml_2g_channels_init(struct ieee80211_channel *channels)
 {
@@ -2050,7 +2047,6 @@ vm_cfg80211_scan(struct wiphy *wiphy, struct cfg80211_scan_request *request)
         ndev->name, __func__, wnet_vif->vm_opmode, wnet_vif->vm_state, wnet_vif->vm_mainsta->connect_status,
         nssids, wifimac->recovery_stat, wnet_vif->vm_phase_flags, wifimac->wm_flags, wifimac->wm_scan->scan_CfgFlags);
 
-
     if (wnet_vif->vm_opmode == WIFINET_M_STA) {
         if (((wnet_vif->vm_state >= WIFINET_S_CONNECTING) && (wnet_vif->vm_mainsta->connect_status != CONNECT_DHCP_GET_ACK))
             || ((wifimac->wm_flags & WIFINET_F_SCAN) && (wifimac->wm_scan->scan_CfgFlags & WIFINET_SCANCFG_CONNECT))
@@ -2282,7 +2278,6 @@ vm_cfg80211_join_ibss(struct wiphy *wiphy,
     struct wlan_net_vif *wnet_vif = wiphy_to_adapter(wiphy);
     struct ieee80211_channel *chan;
 
-
     DPRINTF(AML_DEBUG_CFG80211, "<%s>:<%s>  %s++ %d\n",
             wnet_vif->vm_ndev->name,dev->name, __func__, __LINE__);
 
@@ -2292,7 +2287,6 @@ vm_cfg80211_join_ibss(struct wiphy *wiphy,
         return -EOPNOTSUPP;
     }
     chan = params->chandef.chan;
-
 
     if (chan && chan->center_freq)
     {
@@ -2354,7 +2348,6 @@ vm_cfg80211_leave_ibss(struct wiphy *wiphy, struct net_device *dev)
     DPRINTF(AML_DEBUG_CFG80211, "%s-- %d\n", __func__, __LINE__);
     return 0;
 }
-
 
 static int
 vm_cfg80211_set_tx_power(struct wiphy *wiphy,
@@ -2785,7 +2778,6 @@ static int vm_cfg80211_set_default_mgmt_key(struct wiphy *wiphy,
     return 0;
 }
 
-
 static int
 vm_cfg80211_set_power_mgmt(struct wiphy *wiphy,
     struct net_device *dev,bool enabled, int timeout)
@@ -3142,7 +3134,6 @@ vm_cfg80211_disconnect(struct wiphy *wiphy,
     DPRINTF(AML_DEBUG_CFG80211, "%s %d <%s> reason_code=%d\n",
             __func__, __LINE__, dev->name, reason_code);
 
-
     if (!IS_UP(dev))
     {
         ret = -EINVAL;
@@ -3373,8 +3364,6 @@ aml_vm_vht_rate_map(unsigned int kernel_rate)
 			return 0;
 	}
 }
-
-
 
 static unsigned int
 legacy_k2dot11_rate_map(unsigned int kernel_rate)
@@ -3786,7 +3775,6 @@ static int _iv_cfg80211_add_set_beacon(struct wiphy *wiphy, struct net_device *d
                      goto exit_malloc;
                  }
              }
-
 
             /*parse primary channel offset*/
             switch (ht_op_ie[3] & (BIT(0)|BIT(1))) {
@@ -4599,7 +4587,6 @@ vm_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
     sinfo->txrate.nss = 1;
     sinfo->txrate.bw = sta->sta_vendor_bw == 0 ? 0 : sta->sta_vendor_bw == 1 ? 3 : 4;
 
-
     sinfo->filled |= STATION_INFO_RX_BITRATE;
     rate_flags = 0;
     sinfo->rxrate.mcs = vm_cfg80211_get_mcs(sta->sta_last_rx_vendor_rate, &rate_flags);
@@ -4624,7 +4611,6 @@ vm_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
     return ret;
 }
 
-
 static int
 vm_cfg80211_dump_station(
     struct wiphy *wiphy, struct net_device *ndev,
@@ -4633,7 +4619,6 @@ vm_cfg80211_dump_station(
     DPRINTF(AML_DEBUG_CFG80211, "%s %d <%s>\n", __func__, __LINE__, ndev->name);
     return -ENOENT;
 }
-
 
 static void vm_cancel_remain_channel(struct wlan_net_vif *wnet_vif)
 {
@@ -5340,8 +5325,6 @@ vm_cfg80211_assoc(struct wiphy *wiphy, struct net_device *dev,
 }
 
 //-++
-
-
 
 static int
 vm_cfg80211_set_txq_params(struct wiphy *wiphy, struct net_device *dev,
@@ -6228,7 +6211,6 @@ int vm_cfg80211_vnd_cmd_set_para(struct wiphy *wiphy, struct wireless_dev *wdev,
        batch_dump_reg(wiphy, irr_para_reg_addr, 8);
      break;
 
-
     case VM_NL80211_PHY_STATISTIC:
         wifimac->drv_priv->drv_ops.phy_stc();
         break;
@@ -6634,7 +6616,6 @@ err:
         wnet_vif->vif_ops.write_word(RG_COEX_IRQ_END_TIME, usr_data);
         break;
 
-
      case VM_NL80211_SET_COEXIST_SCAN_PRI_RANGE:
          /*
             bit31-bit16 : minimal  priority
@@ -6665,7 +6646,6 @@ err:
     }
     return ret;
 }
-
 
 const struct wiphy_vendor_command vendor_commands[] = {
 	{
@@ -6748,7 +6728,6 @@ int wifi_mac_alloc_wdev(struct wlan_net_vif *wnet_vif, struct device *dev)
     struct wireless_dev *wdev = NULL;
     struct net_device *netdev = wnet_vif->vm_ndev;
     struct vm_wdev_priv *pwdev_priv;
-
 
     wdev = (struct wireless_dev *)ZMALLOC(sizeof(struct wireless_dev),"wdev", GFP_KERNEL);
     if (!wdev) {
@@ -7100,7 +7079,6 @@ int  netdev_setcsum( struct net_device *dev,int data)
     return 0;
 }
 
-
 int wifi_mac_preempt_scan(struct wifi_mac *wifimac, int max_grace, int max_wait)
 {
     int total_delay = 0;
@@ -7135,7 +7113,6 @@ int wifi_mac_preempt_scan(struct wifi_mac *wifimac, int max_grace, int max_wait)
     return ready;
 }
 
-
 char preempt_scan(struct net_device *dev, int max_grace, int max_wait)
 {
     struct wlan_net_vif *wnet_vif = netdev_priv(dev);
@@ -7152,7 +7129,6 @@ char preempt_scan(struct net_device *dev, int max_grace, int max_wait)
 
     return 0;
 }
-
 
 void batch_dump_reg(struct wiphy *wiphy,unsigned int addr[], unsigned int addr_num)
 {
@@ -7192,7 +7168,7 @@ static void aml_cfg80211_ch_switch_notify(struct net_device *dev,
     || (CONFIG_AMLOGIC_KERNEL_VERSION == 14515 && AML_KERNEL_VERSION >= 12) ) )\
     || (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0) && LINUX_VERSION_CODE < KERNEL_VERSION(6, 9, 0))
     return cfg80211_ch_switch_notify(dev, chandef, link_id, 0);
-#elif defined (CFG80211_SINGLE_NETDEV_MULTI_LINK_SUPPORT)
+#elif defined (CFG80211_SINGLE_NETDEV_MULTI_LINK_SUPPORT) || LINUX_VERSION_CODE >= KERNEL_VERSION(6, 9, 0)
     return cfg80211_ch_switch_notify(dev, chandef, link_id);
 #else
     return cfg80211_ch_switch_notify(dev, chandef);
