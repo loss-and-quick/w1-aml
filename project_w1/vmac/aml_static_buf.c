@@ -26,9 +26,16 @@
 #include "wifi_common.h"
 #include <linux/skbuff.h>
 #include <linux/version.h>
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+/*
+ * <linux/wlan_plat.h> / <linux/amlogic/wlan_plat.h> are not present in
+ * mainline Linux (they only exist in Amlogic's downstream/vendor kernel
+ * tree); neither header's contents are actually referenced anywhere in
+ * this file, so on mainline kernels (verified: no such headers under
+ * include/ in the v7.1 tree) we simply skip both includes.
+ */
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0)) && !defined(NOT_AMLOGIC_PLATFORM)
 #include <linux/wlan_plat.h>
-#else
+#elif defined(CONFIG_AMLOGIC_KERNEL_VERSION) && !defined(NOT_AMLOGIC_PLATFORM)
 #include <linux/amlogic/wlan_plat.h>
 #endif
 
