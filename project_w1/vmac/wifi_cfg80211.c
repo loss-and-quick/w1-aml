@@ -1769,7 +1769,11 @@ void vm_cfg80211_indicate_sta_assoc(const struct wifi_station *sta)
     sinfo.assoc_req_ies_len = len;
 #endif
 	exit:
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,1,0)
+    cfg80211_new_sta(wnet_vif->vm_wdev, sta->sta_macaddr, &sinfo, GFP_ATOMIC);
+#else
     cfg80211_new_sta(dev, sta->sta_macaddr, &sinfo, GFP_ATOMIC);
+#endif
 
     //not ready for kernel=2.6.34
     //cfg80211_rx_mgmt(dev, freq, buf, len, gfp);
@@ -1786,7 +1790,12 @@ vm_cfg80211_indicate_sta_disassoc(const struct wifi_station *sta,
     struct net_device *dev = wnet_vif->vm_ndev;
 
     DPRINTF(AML_DEBUG_CFG80211, "%s %d <%s>\n", __func__, __LINE__, VMAC_DEV_NAME(wnet_vif));
+    /* cfg80211_del_sta(): net_device -> wireless_dev as of Linux 7.1 */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,1,0)
+    cfg80211_del_sta(wnet_vif->vm_wdev, sta->sta_macaddr, GFP_ATOMIC);
+#else
     cfg80211_del_sta(dev, sta->sta_macaddr, GFP_ATOMIC);
+#endif
     return;
 }
 
@@ -2210,7 +2219,11 @@ exit:
     return ret;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,0,0)
+static int vm_cfg80211_set_wiphy_params(struct wiphy *wiphy, int radio_idx, unsigned int changed)
+#else
 static int vm_cfg80211_set_wiphy_params(struct wiphy *wiphy, unsigned int changed)
+#endif
 {
     struct wlan_net_vif *wnet_vif = wiphy_to_adapter(wiphy);
     unsigned short retry_short = 0;
@@ -2351,10 +2364,17 @@ vm_cfg80211_leave_ibss(struct wiphy *wiphy, struct net_device *dev)
     return 0;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,0,0)
+static int
+vm_cfg80211_set_tx_power(struct wiphy *wiphy,
+    struct wireless_dev *wdev, int radio_idx,
+    enum nl80211_tx_power_setting type, int dbm)
+#else
 static int
 vm_cfg80211_set_tx_power(struct wiphy *wiphy,
     struct wireless_dev *wdev,
     enum nl80211_tx_power_setting type, int dbm)
+#endif
 {
     struct wlan_net_vif *wnet_vif = wiphy_to_adapter(wiphy);
     struct wifi_mac *wifimac = wnet_vif->vm_wmac;
@@ -2367,9 +2387,15 @@ vm_cfg80211_set_tx_power(struct wiphy *wiphy,
     return 0;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,0,0)
+static int
+vm_cfg80211_get_tx_power(struct wiphy *wiphy,
+    struct wireless_dev *wdev, int radio_idx, unsigned int link_id, int *dbm)
+#else
 static int
 vm_cfg80211_get_tx_power(struct wiphy *wiphy,
     struct wireless_dev *wdev, int *dbm)
+#endif
 {
     struct wlan_net_vif *wnet_vif = wiphy_to_adapter(wiphy);
     struct wifi_mac *wifimac = wnet_vif->vm_wmac;
@@ -5440,8 +5466,13 @@ vm_cfg80211_set_txq_params(struct wiphy *wiphy, struct net_device *dev,
     return 0;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,0,0)
+static int
+vm_cfg80211_set_antenna(struct wiphy *wiphy, int radio_idx, unsigned int tx_ant, unsigned int rx_ant)
+#else
 static int
 vm_cfg80211_set_antenna(struct wiphy *wiphy, unsigned int tx_ant, unsigned int rx_ant)
+#endif
 {
     ERROR_DEBUG_OUT("no support yet \n");
     return -1;
@@ -5619,8 +5650,13 @@ vm_cfg80211_channel_switch(struct wiphy *wiphy, struct net_device *dev,
     return -1;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(7,0,0)
+static int
+vm_cfg80211_get_antenna(struct wiphy *wiphy, int radio_idx, unsigned int *tx_ant, unsigned int *rx_ant)
+#else
 static int
 vm_cfg80211_get_antenna(struct wiphy *wiphy, unsigned int *tx_ant, unsigned int *rx_ant)
+#endif
 {
     ERROR_DEBUG_OUT("no support yet \n");
     return -1;
@@ -5680,9 +5716,15 @@ vm_cfg80211_set_cqm_txe_cfg(struct wiphy *wiphy,struct net_device *dev,
     return -1;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,13,0)
+static int
+vm_cfg80211_set_monitor_channel(struct wiphy *wiphy, struct net_device *dev,
+                                struct cfg80211_chan_def *chandef)
+#else
 static int
 vm_cfg80211_set_monitor_channel(struct wiphy *wiphy,
                                 struct cfg80211_chan_def *chandef)
+#endif
 {
     struct wlan_net_vif *wnet_vif = wiphy_to_adapter(wiphy);
 
@@ -7257,7 +7299,7 @@ static void aml_cfg80211_ch_switch_started_notify(struct net_device *dev,
     || (CONFIG_AMLOGIC_KERNEL_VERSION == 14515 && AML_KERNEL_VERSION >= 12) ) )\
     || (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0) && LINUX_VERSION_CODE < KERNEL_VERSION(6, 9, 0))
     return cfg80211_ch_switch_started_notify(dev, chandef, link_id, count, quiet, 0);
-#elif defined (CFG80211_SINGLE_NETDEV_MULTI_LINK_SUPPORT)
+#elif defined (CFG80211_SINGLE_NETDEV_MULTI_LINK_SUPPORT) || LINUX_VERSION_CODE >= KERNEL_VERSION(6, 9, 0)
     return cfg80211_ch_switch_started_notify(dev, chandef, link_id, count, quiet);
 #else
     return cfg80211_ch_switch_started_notify(dev, chandef, count);
