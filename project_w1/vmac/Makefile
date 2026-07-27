@@ -101,6 +101,7 @@ ccflags-y += -DAML_WPA3
 ccflags-y += -DDYNAMIC_BW
 #ccflags-y += -DWFA_P2P_TEST
 
+ifneq ($(UNO_GXL),)
 ifeq ($(UNOENV),$(UNO_GXL))
 ccflags-y += -DCONFIG_GXL
 ccflags-y += -DCONFIG_HAS_WAKELOCK
@@ -108,6 +109,11 @@ ccflags-y += -DCONFIG_HAS_WAKELOCK
 #ccflags-y += -DCONFIG_GPIO_RESET
 ccflags-y += -DUSE_GPIO_IRQ=1
 ccflags-y += -DUSE_SDIO_IRQ=0
+endif
+endif
+
+ifeq ($(USE_GPIO_IRQ)$(USE_SDIO_IRQ),)
+ccflags-y += -DUSE_SDIO_IRQ=1
 endif
 
 ifeq ($(CLANG_VERSION), r437112)
