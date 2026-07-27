@@ -37,7 +37,9 @@ namespace FW_NAME
 #include "wifi_drv_statistic.h"
 #endif
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 13, 0))
+MODULE_IMPORT_NS("VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver");
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
 MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 #endif
 
@@ -452,7 +454,6 @@ unsigned int phy_set_bcn_buf(unsigned char wnet_vif_id,unsigned char *pBeacon,
     return 1;
 }
 
-
 unsigned int phy_init_hmac(unsigned char wnet_vif_id)
 {
     //clear all key
@@ -626,7 +627,6 @@ unsigned int phy_set_chan_support_type(struct hal_channel *chan)
             ERROR_DEBUG_OUT("channel relation err!!!\n");
             break;
     }
-
 
     hif->hif_ops.hi_write_word(RG_PHY_BW_REG, to_set);
 
@@ -911,7 +911,6 @@ unsigned int phy_set_slot_time(unsigned int slot)
     hal_priv->sta_con_msg.slot = slot;
     return 0;
 }
-
 
 unsigned int phy_set_bcn_intvl(unsigned char vid,unsigned int bcninterval)
 {
@@ -1406,10 +1405,7 @@ unsigned int phy_set_coexist_req_timeslice_timeout_value( unsigned int timeout_v
     HAL_END_LOCK();
     return 0;
 
-
 }
-
-
 
 unsigned int phy_set_coexist_not_grant_weight( unsigned int not_grant_weight)
 {
@@ -1427,9 +1423,7 @@ unsigned int phy_set_coexist_not_grant_weight( unsigned int not_grant_weight)
 
     return 0;
 
-
 }
-
 
 unsigned int phy_set_coexist_max_not_grant_cnt( unsigned int coexist_max_not_grant_cnt)
 {
@@ -1471,7 +1465,6 @@ unsigned int phy_set_coexist_scan_priority_range( unsigned int coexist_scan_prio
 
 }
 
-
 /*
 bit31-bit16 : minimal  priority
 bit15:bit0: max priority
@@ -1493,7 +1486,6 @@ unsigned int phy_set_coexist_be_bk_noqos_priority_range( unsigned int coexist_sc
     return 0;
 
 }
-
 
 unsigned int phy_coexist_config(const void *data, int data_len)
 {
@@ -2053,7 +2045,6 @@ void phy_set_tx_power_accord_rssi(int bw, unsigned short channel, unsigned char 
             HAL_END_LOCK();
            return;
         }
-
 
     } else {
         return;

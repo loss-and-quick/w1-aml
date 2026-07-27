@@ -1,7 +1,9 @@
 #include "wifi_drv_capture.h"
 #include<asm/div64.h>
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 13, 0))
+MODULE_IMPORT_NS("VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver");
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
 MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 #endif
 
@@ -174,8 +176,6 @@ static void dut_set_tbus(int trigger)
 #endif
 }
 
-
-
 /*
 comand:
 bit31:bit28  is stop_mode for rsv
@@ -328,7 +328,6 @@ static void str_2_ascii_32bits(char* str_in, char* str_out)
 
     return;
 }
-
 
 /* 0:use sw stop   1:use hw stop */
 int  dut_stop_tbus_to_get_sram(struct file *filep, int stop_ctrl, int save_file)

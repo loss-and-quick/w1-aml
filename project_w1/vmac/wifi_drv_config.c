@@ -16,7 +16,9 @@
 #include "wifi_drv_if.h"
 #include "wifi_debug.h"
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 13, 0))
+MODULE_IMPORT_NS("VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver");
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 15, 0))
 MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 #endif
 
@@ -381,7 +383,6 @@ static unsigned char parse_drv_cfg_param(char *varbuf, int len)
     return 0;
 }
 
-
 int drv_cfg_load_from_file(void)
 {
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
@@ -391,7 +392,6 @@ int drv_cfg_load_from_file(void)
     struct file *fp;
     int size, len;
     char *content =  NULL;
-
 
     char conf_path[30] = "/vendor/etc/wifi/w1";
     unsigned char cfg_file[100];
