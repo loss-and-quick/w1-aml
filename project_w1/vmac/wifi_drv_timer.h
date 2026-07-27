@@ -67,7 +67,7 @@ typedef void (*timer_func)(unsigned long);
 #endif
 
 #define OS_SET_TIMER(_timer, _ms) mod_timer(_timer, jiffies + MAX(((_ms)*HZ)/1000,1))
-#define OS_CANCEL_TIMER(_timer) del_timer(_timer)
-#define OS_CANCEL_TIMER_SYNC(_timer) del_timer_sync(_timer)
+#define OS_CANCEL_TIMER(_timer) timer_delete(_timer)
+#define OS_CANCEL_TIMER_SYNC(_timer) timer_delete_sync(_timer)
 
 #endif
