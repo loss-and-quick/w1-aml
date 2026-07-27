@@ -4,35 +4,35 @@ CROSS_COMPILE ?= aarch64-linux-gnu-
 else ifeq ($(ARCH),arm)
 SYSTEM_TYPE = SYSTEM32
 CROSS_COMPILE ?= arm-linux-gnueabihf-
-EXTRA_CFLAGS += -DSYSTEM32
+ccflags-y += -DSYSTEM32
 else ifeq ($(ARCH),arm64)
 SYSTEM_TYPE = SYSTEM64
 CROSS_COMPILE ?= aarch64-linux-gnu-
-EXTRA_CFLAGS += -DSYSTEM64
+ccflags-y += -DSYSTEM64
 endif
 
 
 ifeq ($(PROJ_NAME),p-amlogic)
 SRCTOP ?= /proj/vlsi.wifi/p-amlogic
 KERNELDIR ?= $(SRCTOP)/out/target/product/newton/obj/KERNEL_OBJ
-EXTRA_CFLAGS += -DSYSTEM64
+ccflags-y += -DSYSTEM64
 else ifeq ($(PROJ_NAME),yeke)
 SRCTOP ?= /proj/vlsi.wifi/yeke_64bit
 KERNELDIR ?= $(SRCTOP)/out/target/product/p281/obj/KERNEL_OBJ
-EXTRA_CFLAGS += -DSYSTEM64
+ccflags-y += -DSYSTEM64
 else ifeq ($(PROJ_NAME),9-xiaomi)
 SRCTOP ?= /proj/vlsi.wifi/9-xiaomi
 KERNELDIR ?= $(SRCTOP)/out/target/product/aquaman/obj/KERNEL_OBJ
-EXTRA_CFLAGS += -DSYSTEM64
+ccflags-y += -DSYSTEM64
 else ifeq ($(PROJ_NAME),gva)
 SRCTOP ?= /proj/vlsi.wifi/gva
 KERNELDIR ?= $(SRCTOP)/kernel-4.9/common
-EXTRA_CFLAGS += -DSYSTEM64
+ccflags-y += -DSYSTEM64
 else
 ifeq ($(SYSTEM_TYPE),)
 ARCH = arm
 CROSS_COMPILE = arm-linux-gnueabihf-
-EXTRA_CFLAGS += -DSYSTEM32
+ccflags-y += -DSYSTEM32
 endif
 SRCTOP ?= /proj/vlsi.wifi/p212_32bit
 KERNELDIR ?= $(SRCTOP)/out/target/product/ampere/obj/KERNEL_OBJ
@@ -69,55 +69,55 @@ CONFIG_MAC_SUPPORT=y
 CONFIG_WIFI_CAPTURE=y
 TARGET = vlsicomm
 
-EXTRA_CFLAGS += -Wno-enum-conversion -Wno-strict-prototypes
-EXTRA_CFLAGS += -Wno-implicit-function-declaration -Wno-int-conversion
-EXTRA_CFLAGS += -Wno-misleading-indentation
-EXTRA_CFLAGS += -Wno-unused-but-set-variable -Wno-strict-prototypes -Wno-extra-tokens -Wno-unused-label
-EXTRA_CFLAGS += -Wno-macro-redefined -Wno-unused-but-set-variable -Wno-implicit-function-declaration
-EXTRA_CFLAGS += ${INCS}  -DCONFIG_WAPI
-EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable #show all warning
-EXTRA_CFLAGS += -Werror -Wno-format -Wno-error #convert warning into error
-#EXTRA_CFLAGS += -W	#more strict, linux head file cannot pass, so give up
-#EXTRA_CFLAGS += -w	#ignore warning
-#EXTRA_CFLAGS += -DHALMODULE
-EXTRA_CFLAGS += -DPHY_TEST_FUNC
-EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
-#EXTRA_CFLAGS += -O2	#kernel has
-#EXTRA_CFLAGS += -DDRV_SUPPORT_TX_WITHDRAW
-EXTRA_CFLAGS += -DHAL_FPGA_VER
-EXTRA_CFLAGS += -DPROJECT_W1
-EXTRA_CFLAGS += -DINTER_BEACON
-EXTRA_CFLAGS += -DSRAM_CONCURRENT
-EXTRA_CFLAGS += -DCTS_VERIFIER_GAS
-#EXTRA_CFLAGS += -DRX_PN_CHECK
-#EXTRA_CFLAGS += -DCONFIG_COMPAT
-EXTRA_CFLAGS += -DCONFIG_AML_USE_STATIC_BUF
-EXTRA_CFLAGS += -DSDIO_BUILD_IN
-#EXTRA_CFLAGS += -DDEBUG_MALLOC
-#EXTRA_CFLAGS += -DCONFIG_DPD_ENABLE
-EXTRA_CFLAGS += -DFW_RF_CALIBRATION
-#EXTRA_CFLAGS += -DPOWER_SAVE_NO_SDIO
-EXTRA_CFLAGS += -DAML_WPA3
-EXTRA_CFLAGS += -DDYNAMIC_BW
-#EXTRA_CFLAGS += -DWFA_P2P_TEST
+ccflags-y += -Wno-enum-conversion -Wno-strict-prototypes
+ccflags-y += -Wno-implicit-function-declaration -Wno-int-conversion
+ccflags-y += -Wno-misleading-indentation
+ccflags-y += -Wno-unused-but-set-variable -Wno-strict-prototypes -Wno-extra-tokens -Wno-unused-label
+ccflags-y += -Wno-macro-redefined -Wno-unused-but-set-variable -Wno-implicit-function-declaration
+ccflags-y += ${INCS}  -DCONFIG_WAPI
+ccflags-y += -Wno-unused-function -Wno-unused-variable #show all warning
+ccflags-y += -Werror -Wno-format -Wno-error #convert warning into error
+#ccflags-y += -W	#more strict, linux head file cannot pass, so give up
+#ccflags-y += -w	#ignore warning
+#ccflags-y += -DHALMODULE
+ccflags-y += -DPHY_TEST_FUNC
+ccflags-y += -DCONFIG_CONCURRENT_MODE
+#ccflags-y += -O2	#kernel has
+#ccflags-y += -DDRV_SUPPORT_TX_WITHDRAW
+ccflags-y += -DHAL_FPGA_VER
+ccflags-y += -DPROJECT_W1
+ccflags-y += -DINTER_BEACON
+ccflags-y += -DSRAM_CONCURRENT
+ccflags-y += -DCTS_VERIFIER_GAS
+#ccflags-y += -DRX_PN_CHECK
+#ccflags-y += -DCONFIG_COMPAT
+ccflags-y += -DCONFIG_AML_USE_STATIC_BUF
+ccflags-y += -DSDIO_BUILD_IN
+#ccflags-y += -DDEBUG_MALLOC
+#ccflags-y += -DCONFIG_DPD_ENABLE
+ccflags-y += -DFW_RF_CALIBRATION
+#ccflags-y += -DPOWER_SAVE_NO_SDIO
+ccflags-y += -DAML_WPA3
+ccflags-y += -DDYNAMIC_BW
+#ccflags-y += -DWFA_P2P_TEST
 
 ifeq ($(UNOENV),$(UNO_GXL))
-EXTRA_CFLAGS += -DCONFIG_GXL
-EXTRA_CFLAGS += -DCONFIG_HAS_WAKELOCK
-#EXTRA_CFLAGS += -DCONFIG_RTC_ENABLE
-#EXTRA_CFLAGS += -DCONFIG_GPIO_RESET
-EXTRA_CFLAGS += -DUSE_GPIO_IRQ=1
-EXTRA_CFLAGS += -DUSE_SDIO_IRQ=0
+ccflags-y += -DCONFIG_GXL
+ccflags-y += -DCONFIG_HAS_WAKELOCK
+#ccflags-y += -DCONFIG_RTC_ENABLE
+#ccflags-y += -DCONFIG_GPIO_RESET
+ccflags-y += -DUSE_GPIO_IRQ=1
+ccflags-y += -DUSE_SDIO_IRQ=0
 endif
 
 ifeq ($(CLANG_VERSION), r437112)
-EXTRA_CFLAGS += -Wno-unused-but-set-variable
+ccflags-y += -Wno-unused-but-set-variable
 endif
 ifeq ($(CLANG_VERSION), r450784d)
-EXTRA_CFLAGS += -Wno-unused-but-set-variable
+ccflags-y += -Wno-unused-but-set-variable
 endif
 ifeq ($(CLANG_VERSION), r487747)
-EXTRA_CFLAGS += -Wno-unused-but-set-variable
+ccflags-y += -Wno-unused-but-set-variable
 endif
 
 ifneq ($(KERNELRELEASE),)
@@ -131,17 +131,17 @@ SRC_FILE := $(wildcard $(CUR_DIR)/*.c $(CUR_DIR)/rf_t9026/*.c $(CUR_DIR)/crypto/
 TARGET_FILE = $(subst $(CUR_DIR)/,, $(SRC_FILE:%.c=%.o))
 
 ifneq ($(CONFIG_SDIO),)
-EXTRA_CFLAGS += -DCONFIG_SDIO_IF
-EXTRA_CFLAGS += -DFPGA
-#EXTRA_CFLAGS += -DCONFIG_GPIO_WAKEUP
+ccflags-y += -DCONFIG_SDIO_IF
+ccflags-y += -DFPGA
+#ccflags-y += -DCONFIG_GPIO_WAKEUP
 
 ifeq ($(CONFIG_NOT_AMLOGIC_PLATFORM),y)
-EXTRA_CFLAGS += -DNOT_AMLOGIC_PLATFORM
+ccflags-y += -DNOT_AMLOGIC_PLATFORM
 endif
 
 ifeq ($(CONFIG_PT_SUPPORT),y)
 $(warning Building PT image)
-EXTRA_CFLAGS += -DDRV_PT_SUPPORT
+ccflags-y += -DDRV_PT_SUPPORT
 KBUILD_CFLAGS_MODULE += -Wframe-larger-than=200000000
 KBUILD_CFLAGS_MODULE += -Wlarger-than=20000000
 else
@@ -150,30 +150,30 @@ KBUILD_CFLAGS_MODULE += -Wlarger-than=20000000
 endif
 
 ifeq ($(CONFIG_WIFI_RF_SUPPORT),y)
-EXTRA_CFLAGS += -DWITH_RF
-EXTRA_CFLAGS += -DRF_T9026
+ccflags-y += -DWITH_RF
+ccflags-y += -DRF_T9026
 endif
 
 ifeq ($(CONFIG_MAC_SUPPORT),y)
-EXTRA_CFLAGS += -DCONFIG_MAC_SUPPORT
+ccflags-y += -DCONFIG_MAC_SUPPORT
 ifeq ($(CONFIG_BUILDROOT),y)
-EXTRA_CFLAGS += -DWIFIMAC_PATH=\"/etc/wifi/wifimac.txt\"
-EXTRA_CFLAGS += -DLINUX_PLATFORM
-EXTRA_CFLAGS += -DWPA3_PATCH
+ccflags-y += -DWIFIMAC_PATH=\"/etc/wifi/wifimac.txt\"
+ccflags-y += -DLINUX_PLATFORM
+ccflags-y += -DWPA3_PATCH
 else
-EXTRA_CFLAGS += -DWIFIMAC_PATH=\"/storage/.config/wifimac.txt\"
+ccflags-y += -DWIFIMAC_PATH=\"/storage/.config/wifimac.txt\"
 endif
 endif
 
 ifeq ($(CONFIG_BT_RF_SUPPORT),y)
-EXTRA_CFLAGS += -DDRIVER_FOR_BT
+ccflags-y += -DDRIVER_FOR_BT
 endif
 
 ifeq ($(CONFIG_WIFI_CAPTURE),y)
-EXTRA_CFLAGS += -DWIFI_CAPTURE
+ccflags-y += -DWIFI_CAPTURE
 endif
 
-EXTRA_CFLAGS += -DUSE_T902X_RF
+ccflags-y += -DUSE_T902X_RF
 else#CONFIG_SDIO_IF
 $(DISCARD) += wifi_hif.o
 $(DISCARD) += wifi_sdio.o
@@ -181,11 +181,11 @@ endif #CONFIG_SDIO_IF
 
 ifneq ($(CONFIG_CFG80211),)
 ifneq ($(CONFIG_AML_CFG80211),)
-EXTRA_CFLAGS += -DCONFIG_AML_CFG80211
+ccflags-y += -DCONFIG_AML_CFG80211
 
 ifeq ($(CONFIG_AML_P2P),y)
-EXTRA_CFLAGS += -DCONFIG_P2P
-EXTRA_CFLAGS += -DCONFIG_WFD
+ccflags-y += -DCONFIG_P2P
+ccflags-y += -DCONFIG_WFD
 endif
 
 endif#CONFIG_AML_CFG80211
@@ -202,7 +202,7 @@ modules:
 	@echo "UNO_GXL_SUB_P200=$(UNO_GXL_SUB_P200)"
 	@echo "PROJECT = $(PROJ_NAME)"
 	@echo "UNOENV=$(UNOENV) MAC_VER=$(MAC_VER)"
-	@echo "EXTRA_CFLAGS=$(EXTRA_CFLAGS)"
+	@echo "ccflags-y=$(ccflags-y)"
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL_SRC) M=$(M) modules
 ifneq (${OUT_DIR},)
 ifneq (${LLVM},)
@@ -228,7 +228,7 @@ clean:
 	rm -rf ./print_version.c
 
 depend .depend dep:
-	$(CC) $(EXTRA_CFLAGS) -M *.c > .depend
+	$(CC) $(ccflags-y) -M *.c > .depend
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
