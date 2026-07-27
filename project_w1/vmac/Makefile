@@ -135,7 +135,7 @@ aml_sdio-objs += w1_sdio/w1_sdio.o
 
 obj-m += $(TARGET).o
 DISCARD :=
-SRC_FILE := $(wildcard $(CUR_DIR)/*.c $(CUR_DIR)/rf_t9026/*.c $(CUR_DIR)/crypto/*.c)
+SRC_FILE := $(filter-out %.mod.c,$(wildcard $(CUR_DIR)/*.c $(CUR_DIR)/rf_t9026/*.c $(CUR_DIR)/crypto/*.c))
 TARGET_FILE = $(subst $(CUR_DIR)/,, $(SRC_FILE:%.c=%.o))
 
 ifneq ($(CONFIG_SDIO),)
