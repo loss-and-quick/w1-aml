@@ -1,4 +1,5 @@
 #include "w1_sdio.h"
+#include <linux/vmalloc.h>
 #include <linux/mutex.h>
 
 #include "chip_pmu_reg.h"
@@ -1305,15 +1306,23 @@ EXPORT_SYMBOL(w1_aml_mem_prealloc);
 
 static int aml_init_wlan_mem(void)
 {
-
-    wlan_preallocated_tx_desc_buf = vmalloc(TX_DESC_BUF_LEN);
+    wlan_preallocated_rx_buf = vmalloc(RX_BUF_LEN);
     if (!wlan_preallocated_rx_buf)
         return -ENOMEM;
+
+    wlan_preallocated_tx_desc_buf = vmalloc(TX_DESC_BUF_LEN);
+    if (!wlan_preallocated_tx_desc_buf) {
+        vfree(wlan_preallocated_rx_buf);
+        wlan_preallocated_rx_buf = NULL;
+        return -ENOMEM;
+    }
+
     return 0;
+}
 
 static void aml_deinit_wlan_mem(void)
 {
-    kfree(wlan_preallocated_rx_buf);
+    vfree(wlan_preallocated_rx_buf);
     vfree(wlan_preallocated_tx_desc_buf);
 }
 #endif
